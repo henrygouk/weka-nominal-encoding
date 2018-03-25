@@ -1,4 +1,6 @@
-WEKA Mean Encoding
+WEKA Nominal Encoding
 ==================
 
-Implements a simple mean encoding filter for nominal attributes.
+This repo contains a set of filters for encoding nominal attributes in WEKA. Currently supported techniques are:
+
+* Mean encoding (AKA target encoding)

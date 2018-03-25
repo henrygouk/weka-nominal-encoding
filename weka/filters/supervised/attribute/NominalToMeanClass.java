@@ -88,7 +88,7 @@ public class NominalToMeanClass extends SimpleBatchFilter implements SupervisedF
     }
 
     protected Instances process(Instances inputs) {
-        try{
+
         Instances outputs = determineOutputFormat(inputs);
 
         if(m_Codes == null) {
@@ -146,11 +146,6 @@ public class NominalToMeanClass extends SimpleBatchFilter implements SupervisedF
         }
 
         return outputs;
-        }
-        catch(Exception e) {
-            System.out.println(e);
-            throw e;
-        }
     }
 
     public static void main(String[] args) {

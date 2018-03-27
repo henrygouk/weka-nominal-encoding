@@ -22,6 +22,9 @@
 package weka.filters.supervised.attribute;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Vector;
 
 import weka.core.*;
 import weka.core.Capabilities.*;
@@ -44,6 +47,46 @@ public class NominalToMeanClass extends SimpleBatchFilter implements SupervisedF
     public String getAttributeIndices() {
         return m_SelectedCols.getRanges();
     }
+
+	public Enumeration<Option> listOptions() {
+
+		Vector<Option> result = new Vector<Option>();
+
+        result.addElement(new Option("\tThe indices of the attributes to modify (default: first-last).\n",
+            "-R", 1, "-R <range>"));
+
+		result.addAll(Collections.list(super.listOptions()));
+
+		return result.elements();
+	}
+
+	public String[] getOptions() {
+        
+		Vector<String> result = new Vector<String>();
+
+		result.add("-R");
+		result.add(getAttributeIndices());
+
+		Collections.addAll(result, super.getOptions());
+
+		return result.toArray(new String[result.size()]);
+	}
+
+	public void setOptions(String[] options) throws Exception {
+
+		String tmpStr = Utils.getOption("-R", options);
+
+		if(tmpStr.length() != 0) {
+			setAttributeIndices(tmpStr);
+		}
+		else {
+			setAttributeIndices("first-last");
+		}
+
+		super.setOptions(options);
+
+		Utils.checkForRemainingOptions(options);
+	}
 
     public String globalInfo() {
         return "Performs mean encoding for all specified nominal attributes.";

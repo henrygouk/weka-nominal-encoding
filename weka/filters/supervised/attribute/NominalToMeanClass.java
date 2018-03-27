@@ -110,13 +110,22 @@ public class NominalToMeanClass extends SimpleBatchFilter implements SupervisedF
         
         m_SelectedCols.setUpper(inputFormat.numAttributes() - 1);
         m_SelectedAttributes = m_SelectedCols.getSelection();
-
-        ArrayList<Attribute> newAtts = new ArrayList<Attribute>();
+        m_AttToBeModified = new boolean[inputFormat.numAttributes()];
 
         for(int attIdx : m_SelectedAttributes) {
             Attribute att = inputFormat.attribute(attIdx);
 
             if(att.isNominal() && attIdx != inputFormat.classIndex()) {
+                m_AttToBeModified[attIdx] = true;
+            }
+        }
+
+        ArrayList<Attribute> newAtts = new ArrayList<Attribute>();
+
+        for(int attIdx = 0; attIdx < inputFormat.numAttributes(); attIdx++) {
+            Attribute att = inputFormat.attribute(attIdx);
+
+            if(m_AttToBeModified[attIdx]) {
                 newAtts.add(new Attribute(att.name() + "_mean_encoded"));
             }
             else {
@@ -135,7 +144,6 @@ public class NominalToMeanClass extends SimpleBatchFilter implements SupervisedF
         Instances outputs = determineOutputFormat(inputs);
 
         if(m_Codes == null) {
-            m_AttToBeModified = new boolean[inputs.numAttributes()];
             m_Codes = new double[inputs.numAttributes()][];
 
             double meanClass;
@@ -154,7 +162,6 @@ public class NominalToMeanClass extends SimpleBatchFilter implements SupervisedF
     
                 if(att.isNominal() && attIdx != inputs.classIndex()) {
                     m_Codes[attIdx] = new double[att.numValues()];
-                    m_AttToBeModified[attIdx] = true;
 
                     for(int i = 0; i < inputs.numInstances(); i++) {
                         Instance inst = inputs.instance(i);
